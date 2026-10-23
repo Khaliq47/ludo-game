@@ -1,9 +1,9 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef GAME_HPP
+#define GAME_HPP
 
-#include "Board.h"
-#include "Dice.h"
-#include "Player.h"
+#include "board.hpp"
+#include "dice.hpp"
+#include "player.hpp"
 
 class Game {
 private:

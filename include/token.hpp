@@ -1,7 +1,8 @@
 #ifndef TOKEN_HPP
 #define TOKEN_HPP
+
 #include <iostream>
-#include "Position.hpp"
+#include "position.hpp"
 
 enum class TokenState {
     HOME,
@@ -35,7 +36,9 @@ public:
     int getSteps() const;
     int getId() const;
     int getColour() const;
+    bool isInHomeColumn() const;   // NEW
 
-    friend std::ostream& operator<<(std::ostream& out,const Token& token);
+    friend std::ostream& operator<<(std::ostream& out, const Token& token);
 };
+
 #endif
