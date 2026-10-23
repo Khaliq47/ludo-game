@@ -94,7 +94,7 @@ void Game::run() {
         if (idx == -1) cout << "No token can move" << endl;
         else moveToken(cur, idx, roll);
 
-        board.display(players, numPlayers);
+        if (idx != -1) board.display(players, numPlayers);
 
         if (cur.hasWon()) over = true;
         else if (grantsExtraTurn(roll)) cout << "Got a 6, roll again" << endl;

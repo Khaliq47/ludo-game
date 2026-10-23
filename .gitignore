@@ -54,3 +54,6 @@ build-*/
 # Test output and cache
 Testing/
 .cache/
+*.exe
+out.txt
+out4.txt
