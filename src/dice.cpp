@@ -1,4 +1,4 @@
-#include "Dice.h"
+#include "dice.hpp"
 #include <cstdlib>  
 using namespace std;
 

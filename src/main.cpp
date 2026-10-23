@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include "Game.h"
-#include "Utils.h"
+#include "game.hpp"
+#include "utils.hpp"
 using namespace std;
 
 bool running = true;

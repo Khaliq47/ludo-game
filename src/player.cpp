@@ -1,4 +1,5 @@
-#include "Player.h"
+#include "player.hpp"
+#include "rules.hpp"
 using namespace std;
 
 static const char* COLOUR_NAMES[4] = { "RED", "GREEN", "YELLOW", "BLUE" };
@@ -59,12 +60,7 @@ void Player::tokenFinished() {
 
 bool Player::canMove(int index, int roll) const {
     if (index < 0 || index > 3) return false;
-    const Token& t = tokens[index];
-    switch (t.getState()) {
-        case HOME:     return roll == 6;                              
-        case ACTIVE:   return t.getSteps() + roll <= TOTAL_STEPS;     
-        default:       return false;                                  
-    }
+    return tokenCanMove(tokens[index], roll);
 }
 
 bool Player::canMoveAny(int roll) const {

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Position.hpp" 
+#include "position.hpp" 
 
 Position::Position(): cell(-1), homeColumn(false) {}
 

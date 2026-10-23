@@ -2,7 +2,7 @@
 #define UTILS_H
 
 #include <iostream>
-
+#include <string>
 
 template <typename T>
 T maxOf(T a, T b) {
@@ -31,4 +31,5 @@ class Player;
 int humanChoice(Player& p, int roll);   
 int botChoice(Player& p, int roll);     
 
+int readInt(const std::string& prompt, int low, int high);
 #endif

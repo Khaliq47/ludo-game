@@ -1,9 +1,18 @@
 #include <iostream>
 #include <string>
-#include "Game.h"
-#include "Rules.h"
-#include "Utils.h"
+#include "game.hpp"
+#include "rules.hpp"
+#include "utils.hpp"
 using namespace std;
+
+static string colourName(int c) {
+    static const char* names[4] = { "RED", "GREEN", "YELLOW", "BLUE" };
+    return names[c % 4];
+}
+
+static bool onTrack(const Token& t) {
+    return t.getState() == TokenState::ACTIVE && !t.isInHomeColumn();
+}
 
 Game::Game() {
     numPlayers = 4;
@@ -12,10 +21,7 @@ Game::Game() {
 }
 
 Game::Game(int n) {
-    if (n == 2)
-        numPlayers = 2;
-    else
-        numPlayers = 4;
+    numPlayers = (n == 2) ? 2 : 4;
     turn = 0;
     players = new Player[numPlayers];
 }
@@ -26,19 +32,17 @@ Game::~Game() {
 
 void Game::setup() {
     for (int i = 0; i < numPlayers; i++) {
-        // with 2 players use red and yellow so they sit opposite each other
         int colour = i;
-        if (numPlayers == 2 && i == 1)
-            colour = YELLOW;
+        if (numPlayers == 2 && i == 1) colour = YELLOW;   // opposite corners
 
         cout << "Name of player " << i + 1 << " (" << colourName(colour) << "): ";
         string name;
         getline(cin, name);
-        if (name == "")
-            name = "Player" + to_string(i + 1);
+        if (name == "") name = "Player" + to_string(i + 1);
 
         int type = readInt("1 = human, 2 = bot: ", 1, 2);
-        players[i].setup(name, colour, type == 2);
+        players[i] = Player(name, colour);
+        players[i].setChooser(type == 2 ? botChoice : humanChoice);
     }
 }
 
@@ -49,28 +53,24 @@ Player& Game::getPlayer(int i) {
 void Game::moveToken(Player& p, int idx, int roll) {
     Token& t = p[idx];
 
-    if (t.getState() == HOME) {
+    if (t.getState() == TokenState::HOME) {
         t.leaveHome();
         cout << "Token " << idx + 1 << " comes out to cell " << t.getCell() << endl;
-    }
-    else {
+    } else {
         int from = t.getCell();
         t.move(roll);
 
-        if (t.getState() == FINISHED) {
+        if (t.getState() == TokenState::FINISHED) {
             cout << "Token " << idx + 1 << " reached home!" << endl;
             p.tokenFinished();
-        }
-        else if (t.onTrack()) {
+        } else if (onTrack(t)) {
             cout << "Token " << idx + 1 << " goes " << from << " -> " << t.getCell() << endl;
-        }
-        else {
+        } else {
             cout << "Token " << idx + 1 << " is in the home column" << endl;
         }
     }
 
-    // captures only matter on the main track
-    if (t.onTrack())
+    if (onTrack(t))
         board.checkCapture(t, players, numPlayers);
 }
 
@@ -80,8 +80,7 @@ void Game::showStatus() const {
 }
 
 void Game::run() {
-    board.display();
-    showStatus();
+    board.display(players, numPlayers);
 
     bool over = false;
     while (!over) {
@@ -92,19 +91,14 @@ void Game::run() {
         cout << "Rolled " << roll << endl;
 
         int idx = cur.chooseToken(roll);
-        if (idx == -1)
-            cout << "No token can move" << endl;
-        else
-            moveToken(cur, idx, roll);
+        if (idx == -1) cout << "No token can move" << endl;
+        else moveToken(cur, idx, roll);
 
-        showStatus();
+        board.display(players, numPlayers);
 
-        if (cur.hasWon())
-            over = true;
-        else if (getsExtraTurn(roll))
-            cout << "Got a 6, roll again" << endl;
-        else
-            turn = (turn + 1) % numPlayers;
+        if (cur.hasWon()) over = true;
+        else if (grantsExtraTurn(roll)) cout << "Got a 6, roll again" << endl;
+        else turn = (turn + 1) % numPlayers;
     }
 
     declareWinner();
@@ -124,5 +118,4 @@ void Game::declareWinner() const {
     cout << "\nWinner: " << players[w].getName() << " (" << colourName(players[w].getColour()) << ")" << endl;
     cout << "Tokens home: ";
     printArray(scores, numPlayers);
-    cout << endl;
 }

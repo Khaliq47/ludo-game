@@ -13,7 +13,7 @@ bool grantsExtraTurn(int dice) {
     return dice == 6;
 }
 
-bool canMove(const Token& token, int dice) {
+bool tokenCanMove(const Token& token, int dice) {
     switch (token.getState()) {
         case TokenState::HOME:
             return canLeaveHome(dice);

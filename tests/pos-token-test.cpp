@@ -1,10 +1,9 @@
 //move this file to the root of the folder then run:
-//g++ -std=c++17 -Wall -Wextra -Iinclude main_file.cpp src/Position.cpp src/Token.cpp -o test_game.exe
+//g++ -std=c++17 -Wall -Wextra -Iinclude main_file.cpp src/position.cpp src/token.cpp -o test_game.exe
 //then run the exe file for the tests.
 #include <iostream>
-#include "Position.hpp"
-#include "Token.hpp"
-
+#include "position.hpp"
+#include "token.hpp"
 using namespace std;
 
 int main() {
@@ -56,10 +55,19 @@ int main() {
     cout << "After prefix ++: " << t1 << '\n';
     cout << "Cell should be 6: " << t1.getCell() << '\n';
 
-    t1.move(46);
-    cout << "After moving 46 more steps: " << t1 << '\n';
-    cout << "Cell should wrap to 0: " << t1.getCell() << '\n';
-    cout << "Steps should be 52: " << t1.getSteps() << '\n';
+    t1.move(45);
+    cout << "After 51 steps total: " << t1 << '\n';
+    cout << "Cell should be 51: " << t1.getCell() << '\n';
+
+    t1.move(1);
+    cout << "After 52 steps total: " << t1 << '\n';
+    cout << "Should be in home column: " << t1.isInHomeColumn() << '\n';
+
+    // Wrap-around test using GREEN (starts at 13)
+    Token g(1, 1);
+    g.leaveHome();
+    g.move(40);
+    cout << "Green after 40 steps, cell should be 1: " << g.getCell() << '\n';
 
     t1.sendHome();
     cout << "After sendHome(): " << t1 << '\n';

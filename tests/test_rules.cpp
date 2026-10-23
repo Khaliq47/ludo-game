@@ -15,21 +15,21 @@ int main() {
 
     check(checkDice(isValidRoll, 4), "checkDice with isValidRoll");
     check(!checkDice(canLeaveHome, 4), "checkDice with canLeaveHome");
-    TokenRule rule = canMove;
+    TokenRule rule = tokenCanMove;
     DiceRule dr = grantsExtraTurn;
     check(dr(6), "DiceRule pointer works");
 
     Token t(1, 0);                     
-    check(!canMove(t, 4) && canMove(t, 6), "token in yard needs a 6");
+    check(!tokenCanMove(t, 4) && tokenCanMove(t, 6), "token in yard needs a 6");
     check(rule(t, 6), "TokenRule pointer works");
 
     t.leaveHome();
     t.move(54);                       
-    check(canMove(t, 3) && !canMove(t, 4), "exact roll needed to finish");
+    check(tokenCanMove(t, 3) && !tokenCanMove(t, 4), "exact roll needed to finish");
     check(reachesHomeExactly(t, 3) && !reachesHomeExactly(t, 2), "reachesHomeExactly");
 
     t.move(3);
     t.finish();                         
-    check(!canMove(t, 1), "finished token cannot move");
+    check(!tokenCanMove(t, 1), "finished token cannot move");
     return 0;
 }
